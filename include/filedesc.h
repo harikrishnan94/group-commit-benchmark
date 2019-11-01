@@ -48,10 +48,12 @@ public:
 
   int write(const struct iovec *vector, int count) {
     while (count > 0) {
-      if (writev(fd, vector, std::min(count, IOV_MAX)) == -1) {
+      auto len = std::min(count, IOV_MAX);
+      if (writev(fd, vector, len) == -1) {
         return -1;
       }
 
+      vector += len;
       count -= IOV_MAX;
     }
 
